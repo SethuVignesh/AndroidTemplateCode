@@ -2,37 +2,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/content_provider"
+            android:title="Content Provider" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/recycler"
+            android:title="Recycler and CordView" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/rxjava"
+            android:title="Rx Java" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/okhttp"
+            android:title="OK HTTP" />
+        <item
+            android:id="@+id/lru_cache"
+            android:title="LRU Cache" />
+        <item
+            android:id="@+id/coordinator"
+            android:title="Co-ordinator" />
+        <item
+            android:id="@+id/camera"
+            android:title="Camera" />
+        <item
+            android:id="@+id/toolbar"
+            android:title="Tool Bar" />
+        <item
+            android:id="@+id/retrofit"
+            android:title="Retrofit" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>
