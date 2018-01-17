@@ -3,6 +3,8 @@
     package="com.sethu.androidtemplatecode">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".application.MainApplication"
         android:allowBackup="true"
@@ -22,6 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.RetrofitDemoActivity"/>
+        <activity android:name=".lrucachedemo.LRUMainActivity"/>
+        <activity android:name=".lrucachedemo.ViewImageActivity"/>
     </application>
 
 </manifest>
