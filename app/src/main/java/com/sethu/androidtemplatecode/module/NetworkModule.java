@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import com.sethu.androidtemplatecode.model.EmptyToNullConverter;
 import com.sethu.androidtemplatecode.model.UserEnvelopConverter;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
@@ -18,6 +20,7 @@ public class NetworkModule {
     OkHttpClient client;
     GsonBuilder gsonBuilder;
     Retrofit retrofit;
+    Retrofit retrofit2;
     @Provides
     Gson provideGson() {
        if(gsonBuilder == null) {
@@ -36,9 +39,10 @@ public class NetworkModule {
     }
 
     @Provides
+    @Named("multi_user_data")
     Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
-        if(retrofit == null) {
-            retrofit = new Retrofit.Builder()
+        if(retrofit2 == null) {
+            retrofit2 = new Retrofit.Builder()
                     .addConverterFactory(new EmptyToNullConverter())
                     .addConverterFactory(new UserEnvelopConverter())
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -46,6 +50,21 @@ public class NetworkModule {
                     .client(okHttpClient)
                     .build();
         }
+        return retrofit2;
+    }
+
+    @Provides
+    @Named("single_user_data")
+    Retrofit provideRetrofitInstance(Gson gson, OkHttpClient okHttpClient) {
+        if(retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .addConverterFactory(new EmptyToNullConverter())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .baseUrl("https://reqres.in")
+                    .client(okHttpClient)
+                    .build();
+        }
         return retrofit;
     }
+
 }
