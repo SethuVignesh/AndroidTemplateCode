@@ -92,7 +92,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.lru_cache:
                 startActivity(new Intent(this, LRUMainActivity.class));
+                break;
 
+            case R.id.content_provider:
+                startActivity(new Intent(this, com.sethu.androidtemplatecode.contentproviderdemo.MainActivity.class));
                 break;
         }
 
