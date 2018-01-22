@@ -13,23 +13,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.Toast;
 import com.sethu.androidtemplatecode.R;
 import com.sethu.androidtemplatecode.application.MainApplication;
 import com.sethu.androidtemplatecode.component.MainApplicationComponent;
+import com.sethu.androidtemplatecode.model.AudioUploadResponse;
 import com.sethu.androidtemplatecode.model.CreateUserResponse;
 import com.sethu.androidtemplatecode.model.User;
 import com.sethu.androidtemplatecode.model.UserData;
 import com.sethu.androidtemplatecode.retrofitapiinterface.UserApiInterface;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +54,8 @@ public class RetrofitDemoActivity extends AppCompatActivity implements CreateUse
     Button createUserButton;
     @BindView(R.id.scrollView2)
     ScrollView userListScrollView;
+    @BindView(R.id.uploadAudio)
+    Button uploadAudio ;
     private UserAdapter userAdapter;
     private List<User> userList = new ArrayList<User>();
     private String TAG = getClass().getSimpleName();
@@ -226,5 +233,35 @@ public class RetrofitDemoActivity extends AppCompatActivity implements CreateUse
             }
         });
 
+    }
+
+    @OnClick(R.id.uploadAudio)
+    void handleUploadAudioButton(){
+        try {
+            Toast.makeText(getApplicationContext(),"Uploading audio file from assests folder",Toast.LENGTH_LONG).show();
+            uploadAudioToServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadAudioToServer() throws IOException {
+        RequestBody audioBody = RequestBody.create(MediaType.parse("audio/*"), String.valueOf(getAssets().open("audio.mp3")));
+        MultipartBody.Part audioFile = MultipartBody.Part.createFormData("audio", "audio.mp3", audioBody);
+        UserApiInterface  vInterface = getRetrofitSingleUserConverterInstance().create(UserApiInterface.class);
+        Call<AudioUploadResponse> serverCom = vInterface.uploadAudioToServer("http://10.0.2.2/audio.php" , audioFile);
+        serverCom.enqueue(new Callback<AudioUploadResponse>() {
+            @Override
+            public void onResponse(Call<AudioUploadResponse> call, Response<AudioUploadResponse> response) {
+                AudioUploadResponse audioUploadResponse = response.body();
+                Toast.makeText(getApplicationContext()," "+ audioUploadResponse.getResponse(),Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onResponse: "+audioUploadResponse.getResponse());
+            }
+            @Override
+            public void onFailure(Call<AudioUploadResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext()," "+ t.getMessage(),Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Error message " + t.getMessage());
+            }
+        });
     }
 }
