@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.sethu.androidtemplatecode.lrucachedemo.LRUMainActivity;
+import com.sethu.androidtemplatecode.rxandroid.RxAndroid2DemoActivity;
 import com.sethu.androidtemplatecode.view.RetrofitDemoActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -92,8 +93,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.lru_cache:
                 startActivity(new Intent(this, LRUMainActivity.class));
-
                 break;
+            case R.id.rxjava:
+                startActivity(new Intent(this, RxAndroid2DemoActivity.class));
         }
 
 
