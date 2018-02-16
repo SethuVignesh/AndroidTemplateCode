@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.sethu.androidtemplatecode.coordinatorlayoutdemo.CoordinatorLayoutExamples;
 import com.sethu.androidtemplatecode.lrucachedemo.LRUMainActivity;
 import com.sethu.androidtemplatecode.view.RetrofitDemoActivity;
 
@@ -96,6 +97,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.content_provider:
                 startActivity(new Intent(this, com.sethu.androidtemplatecode.contentproviderdemo.MainActivity.class));
+                break;
+            case R.id.coordinator:
+                startActivity(new Intent(this, CoordinatorLayoutExamples.class));
+
                 break;
         }
 

@@ -27,6 +27,14 @@
         <activity android:name=".lrucachedemo.LRUMainActivity" />
         <activity android:name=".lrucachedemo.ViewImageActivity" />
         <activity android:name=".contentproviderdemo.MainActivity" />
+        <activity android:name=".coordinatorlayoutdemo.FabAndSnackbarActivity" />
+        <activity android:name=".coordinatorlayoutdemo.FabFollowsWidgetActivity" />
+        <activity android:name=".coordinatorlayoutdemo.MainActivity"
+
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".coordinatorlayoutdemo.CollapsingToolbarActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name=".contentproviderdemo.data.FlavorsProvider"
@@ -34,6 +42,7 @@
             android:exported="false"
             android:syncable="true" />
 
+        <activity android:name=".coordinatorlayoutdemo.CoordinatorLayoutExamples"></activity>
     </application>
 
 </manifest>
