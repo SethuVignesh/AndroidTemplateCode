@@ -1,9 +1,14 @@
 package com.sethu.androidtemplatecode.view;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
+
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 import com.sethu.androidtemplatecode.R;
 import com.sethu.androidtemplatecode.application.MainApplication;
 import com.sethu.androidtemplatecode.component.MainApplicationComponent;
@@ -22,6 +30,8 @@ import com.sethu.androidtemplatecode.model.CreateUserResponse;
 import com.sethu.androidtemplatecode.model.User;
 import com.sethu.androidtemplatecode.model.UserData;
 import com.sethu.androidtemplatecode.retrofitapiinterface.UserApiInterface;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +39,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,6 +72,7 @@ public class RetrofitDemoActivity extends AppCompatActivity implements CreateUse
     private List<User> userList = new ArrayList<User>();
     private String TAG = getClass().getSimpleName();
 
+   final int PERMISSIONS_REQUEST_CODE = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,19 +250,17 @@ public class RetrofitDemoActivity extends AppCompatActivity implements CreateUse
 
     @OnClick(R.id.uploadAudio)
     void handleUploadAudioButton(){
-        try {
-            Toast.makeText(getApplicationContext(),"Uploading audio file from assests folder",Toast.LENGTH_LONG).show();
-            uploadAudioToServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Toast.makeText(getApplicationContext()," select file from phone ",Toast.LENGTH_LONG).show();
+        checkPermissionsAndOpenFilePicker();
     }
 
-    private void uploadAudioToServer() throws IOException {
-        RequestBody audioBody = RequestBody.create(MediaType.parse("audio/*"), String.valueOf(getAssets().open("audio.mp3")));
-        MultipartBody.Part audioFile = MultipartBody.Part.createFormData("audio", "audio.mp3", audioBody);
+    private void uploadAudioToServer(String filepath) throws IOException {
+        File f = new File(filepath);
+        RequestBody audioBody = RequestBody.create(MediaType.parse("video/*"), f);
+        String fileName = filepath.substring(filepath.lastIndexOf("/")+1);
+        MultipartBody.Part audioFile = MultipartBody.Part.createFormData("audio", fileName, audioBody);
         UserApiInterface  vInterface = getRetrofitSingleUserConverterInstance().create(UserApiInterface.class);
-        Call<AudioUploadResponse> serverCom = vInterface.uploadAudioToServer("http://10.0.2.2/audio.php" , audioFile);
+        Call<AudioUploadResponse> serverCom = vInterface.uploadAudioToServer("http://192.168.1.27/audio.php" , audioFile);
         serverCom.enqueue(new Callback<AudioUploadResponse>() {
             @Override
             public void onResponse(Call<AudioUploadResponse> call, Response<AudioUploadResponse> response) {
@@ -263,5 +274,62 @@ public class RetrofitDemoActivity extends AppCompatActivity implements CreateUse
                 Log.d(TAG, "Error message " + t.getMessage());
             }
         });
+        f = null;
+    }
+
+    private void checkPermissionsAndOpenFilePicker() {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                showError();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSIONS_REQUEST_CODE);
+            }
+        } else {
+            openFilePicker();
+        }
+    }
+
+    private void openFilePicker() {
+        new MaterialFilePicker()
+                .withActivity(this)
+                .withRequestCode(1)
+                .withFilter(Pattern.compile(".*")) // Filtering files and directories by file name using regexp
+                .withFilterDirectories(true) // Set directories filterable (false by default)
+                .withHiddenFiles(false) // Show hidden files and folders
+                .start();
+    }
+
+    private void showError() {
+        Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openFilePicker();
+                } else {
+                    showError();
+                }
+            }
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            try {
+                uploadAudioToServer(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
