@@ -1,4 +1,4 @@
-package com.sethu.androidtemplatecode.module;
+package com.sethu.androidtemplatecode.dagger.module;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

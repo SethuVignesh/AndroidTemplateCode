@@ -1,7 +1,7 @@
-package com.sethu.androidtemplatecode.component;
+package com.sethu.androidtemplatecode.dagger.component;
 
-//import com.sethu.androidtemplatecode.module.BroadcastModule;
-import com.sethu.androidtemplatecode.module.NetworkModule;
+//import com.sethu.androidtemplatecode.dagger.module.BroadcastModule;
+import com.sethu.androidtemplatecode.dagger.module.NetworkModule;
 
 import javax.inject.Named;
 
