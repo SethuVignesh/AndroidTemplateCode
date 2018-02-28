@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 import com.sethu.androidtemplatecode.R;
-import com.sethu.androidtemplatecode.application.MainApplication;
-import com.sethu.androidtemplatecode.component.MainApplicationComponent;
+import com.sethu.androidtemplatecode.dagger.application.MainApplication;
+import com.sethu.androidtemplatecode.dagger.component.MainApplicationComponent;
 import com.sethu.androidtemplatecode.model.AudioUploadResponse;
 import com.sethu.androidtemplatecode.model.CreateUserResponse;
 import com.sethu.androidtemplatecode.model.User;
@@ -52,7 +52,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class RetrofitDemoActivity extends AppCompatActivity implements CreateUserFragment.ICallback {
+public class RetrofitDemoActivity extends AppCompatActivity {
     MainApplicationComponent component;
     @BindView(R.id.recycler_view)
     public RecyclerView recyclerView;
@@ -219,7 +219,7 @@ public class RetrofitDemoActivity extends AppCompatActivity implements CreateUse
         super.onRestoreInstanceState(savedInstanceState);
     }
     String userCreationResponse;
-    @Override
+
     public void createUserCallback(String username, String job) {
 
         Log.d("Tag",username +" "+job);
